@@ -34,8 +34,8 @@ function Ball(canvas) {
     };
   };
 
-  this.onCollision = (player) => {
-    ySpeed = (y - player.y - player.height / 2) / 10;
+  this.onCollision = (object) => {
+    ySpeed = (y - object.y - object.height / 2) / 10;
 
     goingRight = !goingRight;
   };
