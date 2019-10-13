@@ -1,6 +1,4 @@
 function Player(canvas, { side, upKey, downKey }) { // {{{
-  const g = canvas.getContext('2d');
-
   document.addEventListener('keydown', (event) => {
     if (event.key === upKey) {
       this.move('up');
@@ -34,10 +32,10 @@ function Player(canvas, { side, upKey, downKey }) { // {{{
     else this.up = 0;
   };
 
-  this.update = () => {
+  this.update = (game) => {
     if (this.up === 1 && this.y + this.ySpeed > 0) {
       this.y -= this.ySpeed;
-    } else if (this.up === -1 && this.y + this.height + this.ySpeed < canvas.height) {
+    } else if (this.up === -1 && this.y + this.height + this.ySpeed < game.height) {
       this.y += this.ySpeed;
     }
   };
@@ -51,12 +49,14 @@ function Player(canvas, { side, upKey, downKey }) { // {{{
     this.points += 1;
   };
 
-  this.draw = () => {
-    g.fillStyle = 'white';
-    g.fillRect(this.x, this.y, this.width, this.height);
+  this.draw = (game) => {
+    const render = game.getRender();
 
-    g.font = `${this.fontSize}px Arial`;
-    g.fillText(this.points, this.xPoints, this.yPoints);
+    render.fillStyle = 'white';
+    render.fillRect(this.x, this.y, this.width, this.height);
+
+    render.font = `${this.fontSize}px Arial`;
+    render.fillText(this.points, this.xPoints, this.yPoints);
   };
 }
 
