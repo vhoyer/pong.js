@@ -1,6 +1,7 @@
 import Scoreboard from './assets/play-field/ui/scoreboard';
 import GameLoop from './assets/game-loop';
 import Player from './assets/play-field/characters/player';
+import Collider from './assets/collider';
 import Ball from './assets/play-field/objects/ball';
 
 const canvas = document.getElementById('game');
@@ -30,12 +31,35 @@ const playerR = new Player(canvas, {
   upKey: 'ArrowUp',
   downKey: 'ArrowDown',
 });
-const ball = new Ball(canvas, (winner) => {
+const ball = new Ball(canvas);
+
+const declareWinner = (winner) => {
   ball.reset();
   playerL.reset();
   playerR.reset();
-
   scoreboard.incrementScore(winner);
+};
+
+const playerLWinningArea = new Collider({
+  x: canvas.width,
+  y: 0,
+  height: canvas.height,
+  width: 100,
+  onCollision: () => declareWinner('left'),
+});
+const playerRWinningArea = new Collider({
+  x: -100,
+  y: 0,
+  height: canvas.height,
+  width: 100,
+  onCollision: () => declareWinner('right'),
 });
 
-gameLoop.addObjectsToPipeline(scoreboard, playerL, playerR, ball);
+gameLoop.addObjectsToPipeline(
+  ball,
+  playerL,
+  playerLWinningArea,
+  playerR,
+  playerRWinningArea,
+  scoreboard,
+);

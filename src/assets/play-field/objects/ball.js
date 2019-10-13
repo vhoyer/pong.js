@@ -1,4 +1,4 @@
-function Ball(canvas, declareWinner) {
+function Ball(canvas) {
   const ballRadius = 6;
   const initialPosition = {
     x: canvas.width / 2,
@@ -14,7 +14,6 @@ function Ball(canvas, declareWinner) {
     x = initialPosition.x;
     y = initialPosition.y;
     ySpeed = 0;
-    goingRight = !goingRight;
   };
 
   this.onFixedUpdate = (game) => {
@@ -29,32 +28,16 @@ function Ball(canvas, declareWinner) {
       x -= xSpeed;
     }
 
-    if (x + ballRadius > playerR.x && x + ballRadius < playerR.x + playerR.width) {
-      if (this.collideWithPlayer(playerR)) {
-        goingRight = false;
-      } else {
-        declareWinner('left');
-      }
-    } else if (x - ballRadius > playerL.x && x - ballRadius < playerL.x + playerL.width) {
-      if (this.collideWithPlayer(playerL)) {
-        goingRight = true;
-      } else {
-        declareWinner('right');
-      }
-    }
-
     return {
       topLeft: { x: x - ballRadius, y: y - ballRadius },
       bottomRight: { x: x + ballRadius, y: y + ballRadius },
     };
   };
 
-  this.collideWithPlayer = (playerClass) => {
-    if (y > playerClass.y && y < playerClass.y + playerClass.height) {
-      ySpeed = (y - playerClass.y - playerClass.height / 2) / 10;
-      return true;
-    }
-    return false;
+  this.onCollision = (player) => {
+    ySpeed = (y - player.y - player.height / 2) / 10;
+
+    goingRight = !goingRight;
   };
 
   this.onDraw = (game) => {
