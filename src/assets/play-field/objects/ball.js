@@ -1,3 +1,5 @@
+import Player from '../characters/player';
+
 function Ball(canvas) {
   const ballRadius = 6;
   const initialPosition = {
@@ -14,6 +16,7 @@ function Ball(canvas) {
     x = initialPosition.x;
     y = initialPosition.y;
     ySpeed = 0;
+    goingRight = !goingRight;
   };
 
   this.onFixedUpdate = (game) => {
@@ -34,8 +37,15 @@ function Ball(canvas) {
     };
   };
 
-  this.onCollision = (object) => {
-    ySpeed = (y - object.y - object.height / 2) / 10;
+  this.onCollision = (other) => {
+    if (!(other instanceof Player)) {
+      return;
+    }
+
+    const box = other.getBox();
+    const otherCenterY = box.y + box.height / 2;
+
+    ySpeed = (y - otherCenterY) / 10;
 
     goingRight = !goingRight;
   };

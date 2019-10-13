@@ -9,47 +9,51 @@ function Player(canvas, { side, upKey, downKey }) { // {{{
 
   document.addEventListener('keyup', (event) => {
     if ([upKey, downKey].includes(event.key)) {
-      this.move('none');
+      this.move('idle');
     }
   });
 
-  this.screenMargin = 3; // offset from screen edge
-  this.ySpeed = 3.4;
-  this.direction = 0; // going up/down/idle = 1/-1/0
-  this.width = 10;
-  this.height = 100;
-  this.x = side === 'left' ? this.screenMargin : canvas.width - this.width - this.screenMargin;
-  this.y = canvas.height / 2 - this.height / 2;
+  const screenMargin = 3; // offset from screen edge
+  const ySpeed = 3.4;
+  const width = 10;
+  const height = 100;
+  const x = side === 'left' ? screenMargin : canvas.width - width - screenMargin;
+  let y = canvas.height / 2 - height / 2;
+
+  this.getBox = () => ({
+    x, y, height, width,
+  });
+
+  /**
+   * Represents the direction the player is going.
+   * If value is:
+   *  1: it moves up, towards the top of the screen
+   *  0: it stays idle, don't move
+   * -1: it moves down, towards the bottom of the screen
+   * @type Number
+   */
+  let direction = 0;
 
   this.move = (dir) => {
     if (dir === 'up') {
-      this.direction = 1;
+      direction = 1;
     } else if (dir === 'down') {
-      this.direction = -1;
+      direction = -1;
     } else {
-      this.direction = 0;
+      direction = 0;
     }
   };
 
   this.reset = () => {
-    this.y = canvas.height / 2 - this.height / 2;
-    this.direction = 0;
+    y = canvas.height / 2 - height / 2;
+    direction = 0;
   };
 
   this.onFixedUpdate = (game) => {
-    const {
-      x,
-      y,
-      width,
-      height,
-      direction,
-      ySpeed,
-    } = this;
-
     if (direction === 1 && y + ySpeed > 0) {
-      this.y -= ySpeed;
+      y -= ySpeed;
     } else if (direction === -1 && y + height + ySpeed < game.height) {
-      this.y += ySpeed;
+      y += ySpeed;
     }
 
     return {
@@ -62,7 +66,7 @@ function Player(canvas, { side, upKey, downKey }) { // {{{
     const render = game.getRender();
 
     render.fillStyle = 'white';
-    render.fillRect(this.x, this.y, this.width, this.height);
+    render.fillRect(x, y, width, height);
   };
 }
 
