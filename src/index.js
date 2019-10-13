@@ -1,119 +1,18 @@
-// initing vars
+import Player from './assets/play-field/characters/player';
+import Ball from './assets/play-field/objects/ball';
+
 // screen vars
 const canvas = document.getElementById('game');
 canvas.width = 800 * 1.3;
 canvas.height = 450 * 1.3;
 
 const g = canvas.getContext('2d');
-// player vars
-const Player = function player(pos) { // {{{
-  this.offset = 3; // offset from screen edge
-  this.ySpeed = 3.4;
-  this.up = 0; // going up/down/idle = 1/-1/0
-  this.width = 10;
-  this.height = 100;
-  this.x = pos === 0 ? this.offset : canvas.width - this.width - this.offset;
-  this.y = canvas.height / 2 - this.height / 2;
 
-  this.fontSize = 35;
-  this.xPoints = pos === 0 ? canvas.width * (1 / 6) : canvas.width * (4 / 6);
-  this.yPoints = this.fontSize + this.offset;
-  this.points = 0;
-
-  this.move = (dir) => {
-    if (dir === 'up') this.up = 1;
-    else if (dir === 'down') this.up = -1;
-    else this.up = 0;
-  };
-
-  this.update = () => {
-    if (this.up === 1 && this.y + this.ySpeed > 0) {
-      this.y -= this.ySpeed;
-    } else if (this.up === -1 && this.y + this.height + this.ySpeed < canvas.height) {
-      this.y += this.ySpeed;
-    }
-  };
-
-  this.reset = () => {
-    this.y = canvas.height / 2 - this.height / 2;
-    this.up = 0;
-  };
-
-  this.point = () => {
-    this.points += 1;
-  };
-
-  this.draw = () => {
-    g.fillStyle = 'white';
-    g.fillRect(this.x, this.y, this.width, this.height);
-
-    g.font = `${this.fontSize}px Arial`;
-    g.fillText(this.points, this.xPoints, this.yPoints);
-  };
-};// }}}
-const Ball = function ball(playerL, playerR, declareWinner) { // {{{
-  this.xSpeed = 6;
-  this.ySpeed = 0;
-  this.rad = 6;
-  this.x = canvas.width / 2;
-  this.y = canvas.height / 2;
-  this.right = true;
-
-  this.update = () => {
-    this.y += this.ySpeed;
-    if (this.y + this.rad <= 3 || this.y + this.rad >= canvas.height - 3) this.ySpeed *= -1;
-
-    if (this.right) {
-      this.x += this.xSpeed;
-    } else {
-      this.x -= this.xSpeed;
-    }
-
-    if (this.x + this.rad > playerR.x && this.x + this.rad < playerR.x + playerR.width) {
-      if (this.collideWithPlayer(playerR)) {
-        this.right = false;
-      } else {
-        declareWinner('left');
-      }
-    }
-    if (this.x - this.rad > playerL.x && this.x - this.rad < playerL.x + playerL.width) {
-      if (this.collideWithPlayer(playerL)) {
-        this.right = true;
-      } else {
-        declareWinner('right');
-      }
-    }
-  };
-
-  this.reset = () => {
-    this.x = canvas.width / 2;
-    this.y = canvas.height / 2;
-    this.ySpeed = 0;
-    this.right = !this.right;
-  };
-
-  this.collideWithPlayer = (playerClass) => {
-    if (this.y > playerClass.y && this.y < playerClass.y + playerClass.height) {
-      this.ySpeed = (this.y - playerClass.y - playerClass.height / 2) / 10;
-      return true;
-    }
-    return false;
-  };
-
-  this.draw = () => {
-    g.fillStyle = 'white';
-    g.beginPath();
-    g.arc(this.x, this.y, this.rad, 0, 2 * Math.PI);
-    g.fill();
-  };
-};// }}}
-
-// ///////////////////////////////////////////////////////////////////////
 
 // setting vars
-const playerL = new Player(0);
-const playerR = new Player(1);
-const ball = new Ball(playerL, playerR, (winner) => {
+const playerL = new Player(0, canvas);
+const playerR = new Player(1, canvas);
+const ball = new Ball(canvas, playerL, playerR, (winner) => {
   ball.reset();
   playerL.reset();
   playerR.reset();
@@ -145,7 +44,6 @@ function draw() {
   ball.draw();
 }
 
-// Key listeners {{{
 document.addEventListener('keydown', (event) => {
   if (event.keyCode === 38) { // up arrow
     playerR.move('up');
@@ -166,7 +64,7 @@ document.addEventListener('keyup', (event) => {
   if (event.keyCode === 87 || event.keyCode === 83) { // w || s
     playerL.move('none');
   }
-});// }}}
+});
 
 draw();
 setInterval(() => {
