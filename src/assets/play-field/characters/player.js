@@ -1,19 +1,30 @@
-/**
- * Get a player instance
- */
-export default function player(pos, canvas) { // {{{
+function Player(canvas, { side, upKey, downKey }) { // {{{
   const g = canvas.getContext('2d');
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === upKey) {
+      this.move('up');
+    } else if (event.key === downKey) {
+      this.move('down');
+    }
+  });
+
+  document.addEventListener('keyup', (event) => {
+    if ([upKey, downKey].includes(event.key)) {
+      this.move('none');
+    }
+  });
 
   this.offset = 3; // offset from screen edge
   this.ySpeed = 3.4;
   this.up = 0; // going up/down/idle = 1/-1/0
   this.width = 10;
   this.height = 100;
-  this.x = pos === 0 ? this.offset : canvas.width - this.width - this.offset;
+  this.x = side === 'left' ? this.offset : canvas.width - this.width - this.offset;
   this.y = canvas.height / 2 - this.height / 2;
 
   this.fontSize = 35;
-  this.xPoints = pos === 0 ? canvas.width * (1 / 6) : canvas.width * (4 / 6);
+  this.xPoints = side === 'left' ? canvas.width * (1 / 6) : canvas.width * (4 / 6);
   this.yPoints = this.fontSize + this.offset;
   this.points = 0;
 
@@ -48,3 +59,5 @@ export default function player(pos, canvas) { // {{{
     g.fillText(this.points, this.xPoints, this.yPoints);
   };
 }
+
+export default Player;

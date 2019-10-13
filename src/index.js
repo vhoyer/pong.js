@@ -10,8 +10,16 @@ const g = canvas.getContext('2d');
 
 
 // setting vars
-const playerL = new Player(0, canvas);
-const playerR = new Player(1, canvas);
+const playerL = new Player(canvas, {
+  side: 'left',
+  upKey: 'w',
+  downKey: 's',
+});
+const playerR = new Player(canvas, {
+  side: 'right',
+  upKey: 'ArrowUp',
+  downKey: 'ArrowDown',
+});
 const ball = new Ball(canvas, playerL, playerR, (winner) => {
   ball.reset();
   playerL.reset();
@@ -43,28 +51,6 @@ function draw() {
   playerR.draw();
   ball.draw();
 }
-
-document.addEventListener('keydown', (event) => {
-  if (event.key === 'w') {
-    playerL.move('up');
-  } else if (event.key === 's') {
-    playerL.move('down');
-  }
-
-  if (event.key === 'ArrowUp') {
-    playerR.move('up');
-  } else if (event.key === 'ArrowDown') {
-    playerR.move('down');
-  }
-});
-document.addEventListener('keyup', (event) => {
-  if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
-    playerR.move('none');
-  }
-  if (event.key === 'w' || event.key === 's') {
-    playerL.move('none');
-  }
-});
 
 draw();
 setInterval(() => {
