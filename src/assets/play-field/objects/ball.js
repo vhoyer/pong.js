@@ -5,33 +5,32 @@ export default function ball(canvas, playerL, playerR, declareWinner) {
     y: canvas.height / 2,
   };
 
-  this.xSpeed = 6;
-  this.ySpeed = 0;
-  this.x = initialPosition.x;
-  this.y = initialPosition.y;
-  this.goingRight = true;
+  const xSpeed = 6;
+  let ySpeed = 0;
+  let goingRight = true;
+  let { x, y } = initialPosition;
 
   this.update = (game) => {
-    this.y += this.ySpeed;
-    if (this.y + ballRadius <= 3 || this.y + ballRadius >= game.height - 3) {
-      this.ySpeed *= -1;
+    y += ySpeed;
+    if (y + ballRadius <= 3 || y + ballRadius >= game.height - 3) {
+      ySpeed *= -1;
     }
 
-    if (this.goingRight) {
-      this.x += this.xSpeed;
+    if (goingRight) {
+      x += xSpeed;
     } else {
-      this.x -= this.xSpeed;
+      x -= xSpeed;
     }
 
-    if (this.x + ballRadius > playerR.x && this.x + ballRadius < playerR.x + playerR.width) {
+    if (x + ballRadius > playerR.x && x + ballRadius < playerR.x + playerR.width) {
       if (this.collideWithPlayer(playerR)) {
-        this.goingRight = false;
+        goingRight = false;
       } else {
         declareWinner('left');
       }
-    } else if (this.x - ballRadius > playerL.x && this.x - ballRadius < playerL.x + playerL.width) {
+    } else if (x - ballRadius > playerL.x && x - ballRadius < playerL.x + playerL.width) {
       if (this.collideWithPlayer(playerL)) {
-        this.goingRight = true;
+        goingRight = true;
       } else {
         declareWinner('right');
       }
@@ -39,15 +38,15 @@ export default function ball(canvas, playerL, playerR, declareWinner) {
   };
 
   this.reset = () => {
-    this.x = initialPosition.x;
-    this.y = initialPosition.y;
-    this.ySpeed = 0;
-    this.goingRight = !this.goingRight;
+    x = initialPosition.x;
+    y = initialPosition.y;
+    ySpeed = 0;
+    goingRight = !goingRight;
   };
 
   this.collideWithPlayer = (playerClass) => {
-    if (this.y > playerClass.y && this.y < playerClass.y + playerClass.height) {
-      this.ySpeed = (this.y - playerClass.y - playerClass.height / 2) / 10;
+    if (y > playerClass.y && y < playerClass.y + playerClass.height) {
+      ySpeed = (y - playerClass.y - playerClass.height / 2) / 10;
       return true;
     }
     return false;
@@ -58,7 +57,7 @@ export default function ball(canvas, playerL, playerR, declareWinner) {
 
     render.fillStyle = 'white';
     render.beginPath();
-    render.arc(this.x, this.y, ballRadius, 0, 2 * Math.PI);
+    render.arc(x, y, ballRadius, 0, 2 * Math.PI);
     render.fill();
   };
 }
