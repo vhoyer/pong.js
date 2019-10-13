@@ -1,3 +1,4 @@
+import GameLoop from './assets/game-loop';
 import Player from './assets/play-field/characters/player';
 import Ball from './assets/play-field/objects/ball';
 
@@ -6,7 +7,16 @@ const canvas = document.getElementById('game');
 canvas.width = 800 * 1.3;
 canvas.height = 450 * 1.3;
 
-const g = canvas.getContext('2d');
+function drawBackground(game) {
+  const { width, height } = game;
+  const render = game.getRender();
+
+  render.fillStyle = 'black';
+  render.fillRect(0, 0, width, height);
+}
+
+const gameLoop = new GameLoop(canvas);
+gameLoop.addToDrawPipeline(drawBackground);
 
 
 // setting vars
@@ -32,28 +42,6 @@ const ball = new Ball(canvas, playerL, playerR, (winner) => {
   }
 });
 
-// setting backgroung
-function drawBackground() {
-  g.fillStyle = 'black';
-  g.fillRect(0, 0, canvas.width, canvas.height);
-}
-
-function tick() {
-  ball.update();
-  playerL.update();
-  playerR.update();
-}
-function draw() {
-  // reset canvas
-  drawBackground();
-
-  playerL.draw();
-  playerR.draw();
-  ball.draw();
-}
-
-draw();
-setInterval(() => {
-  tick();
-  draw();
-}, 1000 / 60);
+gameLoop.addObjectToPipeline(playerL);
+gameLoop.addObjectToPipeline(playerR);
+gameLoop.addObjectToPipeline(ball);
