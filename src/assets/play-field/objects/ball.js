@@ -1,15 +1,21 @@
 export default function ball(canvas, playerL, playerR, declareWinner) {
   const ballRadius = 6;
+  const initialPosition = {
+    x: canvas.width / 2,
+    y: canvas.height / 2,
+  };
 
   this.xSpeed = 6;
   this.ySpeed = 0;
-  this.x = canvas.width / 2;
-  this.y = canvas.height / 2;
+  this.x = initialPosition.x;
+  this.y = initialPosition.y;
   this.goingRight = true;
 
   this.update = (game) => {
     this.y += this.ySpeed;
-    if (this.y + ballRadius <= 3 || this.y + ballRadius >= game.height - 3) this.ySpeed *= -1;
+    if (this.y + ballRadius <= 3 || this.y + ballRadius >= game.height - 3) {
+      this.ySpeed *= -1;
+    }
 
     if (this.goingRight) {
       this.x += this.xSpeed;
@@ -23,8 +29,7 @@ export default function ball(canvas, playerL, playerR, declareWinner) {
       } else {
         declareWinner('left');
       }
-    }
-    if (this.x - ballRadius > playerL.x && this.x - ballRadius < playerL.x + playerL.width) {
+    } else if (this.x - ballRadius > playerL.x && this.x - ballRadius < playerL.x + playerL.width) {
       if (this.collideWithPlayer(playerL)) {
         this.goingRight = true;
       } else {
@@ -34,8 +39,8 @@ export default function ball(canvas, playerL, playerR, declareWinner) {
   };
 
   this.reset = () => {
-    this.x = canvas.width / 2;
-    this.y = canvas.height / 2;
+    this.x = initialPosition.x;
+    this.y = initialPosition.y;
     this.ySpeed = 0;
     this.goingRight = !this.goingRight;
   };
