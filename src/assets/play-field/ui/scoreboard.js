@@ -7,7 +7,11 @@ function Scoreboard() {
     right: { score: 0 },
   };
 
-  this.draw = (game) => {
+  this.incrementScore = (side) => {
+    board[side].score += 1;
+  };
+
+  this.onDraw = (game) => {
     const render = game.getRender();
 
     render.fillStyle = 'white';
@@ -19,10 +23,6 @@ function Scoreboard() {
 
       render.fillText(score, x, yPosition);
     });
-  };
-
-  this.incrementScore = (side) => {
-    board[side].score += 1;
   };
 }
 

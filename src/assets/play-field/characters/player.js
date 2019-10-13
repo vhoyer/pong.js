@@ -31,20 +31,34 @@ function Player(canvas, { side, upKey, downKey }) { // {{{
     }
   };
 
-  this.update = (game) => {
-    if (this.direction === 1 && this.y + this.ySpeed > 0) {
-      this.y -= this.ySpeed;
-    } else if (this.direction === -1 && this.y + this.height + this.ySpeed < game.height) {
-      this.y += this.ySpeed;
-    }
-  };
-
   this.reset = () => {
     this.y = canvas.height / 2 - this.height / 2;
     this.direction = 0;
   };
 
-  this.draw = (game) => {
+  this.onFixedUpdate = (game) => {
+    const {
+      x,
+      y,
+      width,
+      height,
+      direction,
+      ySpeed,
+    } = this;
+
+    if (direction === 1 && y + ySpeed > 0) {
+      this.y -= ySpeed;
+    } else if (direction === -1 && y + height + ySpeed < game.height) {
+      this.y += ySpeed;
+    }
+
+    return {
+      topLeft: { x, y },
+      bottomRight: { x: x + width, y: y + height },
+    };
+  };
+
+  this.onDraw = (game) => {
     const render = game.getRender();
 
     render.fillStyle = 'white';
