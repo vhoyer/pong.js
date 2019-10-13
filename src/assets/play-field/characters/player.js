@@ -13,36 +13,40 @@ function Player(canvas, { side, upKey, downKey }) { // {{{
     }
   });
 
-  this.offset = 3; // offset from screen edge
+  this.screenMargin = 3; // offset from screen edge
   this.ySpeed = 3.4;
-  this.up = 0; // going up/down/idle = 1/-1/0
+  this.direction = 0; // going up/down/idle = 1/-1/0
   this.width = 10;
   this.height = 100;
-  this.x = side === 'left' ? this.offset : canvas.width - this.width - this.offset;
+  this.x = side === 'left' ? this.screenMargin : canvas.width - this.width - this.screenMargin;
   this.y = canvas.height / 2 - this.height / 2;
 
   this.fontSize = 35;
   this.xPoints = side === 'left' ? canvas.width * (1 / 6) : canvas.width * (4 / 6);
-  this.yPoints = this.fontSize + this.offset;
+  this.yPoints = this.fontSize + this.screenMargin;
   this.points = 0;
 
   this.move = (dir) => {
-    if (dir === 'up') this.up = 1;
-    else if (dir === 'down') this.up = -1;
-    else this.up = 0;
+    if (dir === 'up') {
+      this.direction = 1;
+    } else if (dir === 'down') {
+      this.direction = -1;
+    } else {
+      this.direction = 0;
+    }
   };
 
   this.update = (game) => {
-    if (this.up === 1 && this.y + this.ySpeed > 0) {
+    if (this.direction === 1 && this.y + this.ySpeed > 0) {
       this.y -= this.ySpeed;
-    } else if (this.up === -1 && this.y + this.height + this.ySpeed < game.height) {
+    } else if (this.direction === -1 && this.y + this.height + this.ySpeed < game.height) {
       this.y += this.ySpeed;
     }
   };
 
   this.reset = () => {
     this.y = canvas.height / 2 - this.height / 2;
-    this.up = 0;
+    this.direction = 0;
   };
 
   this.point = () => {
