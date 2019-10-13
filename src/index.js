@@ -30,7 +30,7 @@ const playerR = new Player(canvas, {
   upKey: 'ArrowUp',
   downKey: 'ArrowDown',
 });
-const ball = new Ball(canvas, playerL, playerR, (winner) => {
+const ball = new Ball(canvas, (winner) => {
   ball.reset();
   playerL.reset();
   playerR.reset();

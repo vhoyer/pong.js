@@ -56,14 +56,14 @@ class GameLoop {
   }
 
   drawEverything() {
-    this.draw.forEach((drawSomething) => {
-      drawSomething(this.game);
+    this.draw.forEach((onDraw) => {
+      onDraw(this.game);
     });
   }
 
   updateEverthing() {
-    return this.update.reduce((hitboxes, [updateFunction, object]) => {
-      const currentObjectHitbox = updateFunction(this.game);
+    return this.update.reduce((hitboxes, [onFixedUpdate, object]) => {
+      const currentObjectHitbox = onFixedUpdate(this.game);
 
       if (!currentObjectHitbox) return hitboxes;
 
@@ -87,22 +87,22 @@ class GameLoop {
     }
   }
 
-  addToDrawPipeline(drawFunction) {
-    this.draw.push(drawFunction);
+  addToDrawPipeline(onDraw) {
+    this.draw.push(onDraw);
   }
 
-  addToUpdatePipeline(updateTuple) {
-    this.update.push(updateTuple);
+  addToUpdatePipeline(onFixedUpdate, object) {
+    this.update.push([onFixedUpdate, object]);
   }
 
   addObjectsToPipeline(...objects) {
     objects.forEach((object) => {
-      if (typeof object.draw === 'function') {
-        this.addToDrawPipeline(object.draw);
+      if (typeof object.onDraw === 'function') {
+        this.addToDrawPipeline(object.onDraw);
       }
 
-      if (typeof object.update === 'function') {
-        this.addToUpdatePipeline([object.update, object]);
+      if (typeof object.onFixedUpdate === 'function') {
+        this.addToUpdatePipeline(object.onFixedUpdate, object);
       }
     });
   }

@@ -31,7 +31,12 @@ function Player(canvas, { side, upKey, downKey }) { // {{{
     }
   };
 
-  this.update = (game) => {
+  this.reset = () => {
+    this.y = canvas.height / 2 - this.height / 2;
+    this.direction = 0;
+  };
+
+  this.onFixedUpdate = (game) => {
     const {
       x,
       y,
@@ -53,12 +58,7 @@ function Player(canvas, { side, upKey, downKey }) { // {{{
     };
   };
 
-  this.reset = () => {
-    this.y = canvas.height / 2 - this.height / 2;
-    this.direction = 0;
-  };
-
-  this.draw = (game) => {
+  this.onDraw = (game) => {
     const render = game.getRender();
 
     render.fillStyle = 'white';
