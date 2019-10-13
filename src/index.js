@@ -16,7 +16,7 @@ const Player = function player(pos) { // {{{
   this.y = canvas.height / 2 - this.height / 2;
 
   this.fontSize = 35;
-  this.xPoints = pos === 0 ? canvas.width / 6 * 1 : canvas.width / 6 * 4;
+  this.xPoints = pos === 0 ? canvas.width * (1 / 6) : canvas.width * (4 / 6);
   this.yPoints = this.fontSize + this.offset;
   this.points = 0;
 
@@ -27,8 +27,11 @@ const Player = function player(pos) { // {{{
   };
 
   this.update = () => {
-    if (this.up === 1 && this.y + this.ySpeed > 0) this.y -= this.ySpeed;
-    else if (this.up === -1 && this.y + this.height + this.ySpeed < canvas.height) this.y += this.ySpeed;
+    if (this.up === 1 && this.y + this.ySpeed > 0) {
+      this.y -= this.ySpeed;
+    } else if (this.up === -1 && this.y + this.height + this.ySpeed < canvas.height) {
+      this.y += this.ySpeed;
+    }
   };
 
   this.reset = () => {
@@ -48,7 +51,7 @@ const Player = function player(pos) { // {{{
     g.fillText(this.points, this.xPoints, this.yPoints);
   };
 };// }}}
-const Ball = function ball(playerL, playerR) { // {{{
+const Ball = function ball(playerL, playerR, declareWinner) { // {{{
   this.xSpeed = 6;
   this.ySpeed = 0;
   this.rad = 6;
@@ -70,14 +73,14 @@ const Ball = function ball(playerL, playerR) { // {{{
       if (this.collideWithPlayer(playerR)) {
         this.right = false;
       } else {
-        reset('left');
+        declareWinner('left');
       }
     }
     if (this.x - this.rad > playerL.x && this.x - this.rad < playerL.x + playerL.width) {
       if (this.collideWithPlayer(playerL)) {
         this.right = true;
       } else {
-        reset('right');
+        declareWinner('right');
       }
     }
   };
@@ -110,21 +113,22 @@ const Ball = function ball(playerL, playerR) { // {{{
 // setting vars
 const playerL = new Player(0);
 const playerR = new Player(1);
-const ball = new Ball(playerL, playerR);
+const ball = new Ball(playerL, playerR, (winner) => {
+  ball.reset();
+  playerL.reset();
+  playerR.reset();
+
+  if (winner === 'left') {
+    playerL.point();
+  } else {
+    playerR.point();
+  }
+});
 
 // setting backgroung
 function drawBackground() {
   g.fillStyle = 'black';
   g.fillRect(0, 0, canvas.width, canvas.height);
-}
-
-function reset(winner) {
-  ball.reset();
-  playerL.reset();
-  playerR.reset();
-
-  if (winner === 'left') playerL.point();
-  else playerR.point();
 }
 
 function tick() {
