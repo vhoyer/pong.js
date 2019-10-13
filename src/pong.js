@@ -1,12 +1,11 @@
 //initing vars
 	//screen vars
-var self = this;
 var screen = document.body;
 
-var width = 800 * 1.3;
-var height = 450 * 1.3;
-
 var canvas = document.getElementById("game");
+canvas.width = 800 * 1.3;
+canvas.height = 450 * 1.3;
+
 var g = canvas.getContext("2d");
 	//player vars
 var Player = function(pos) {//{{{
@@ -15,11 +14,11 @@ var Player = function(pos) {//{{{
 	this.up = 0; //going up/down/idle = 1/-1/0
 	this.width = 10;
 	this.height = 100;
-	this.x = pos == 0 ? this.offset : self.width - this.width - this.offset;
-	this.y = self.height/2 - this.height/2;
+	this.x = pos == 0 ? this.offset : canvas.width - this.width - this.offset;
+	this.y = canvas.height/2 - this.height/2;
 
 	this.fontSize = 35;
-	this.xPoints = pos == 0 ? self.width/6 * 1 : self.width/6 * 4;
+	this.xPoints = pos == 0 ? canvas.width/6 * 1 : canvas.width/6 * 4;
 	this.yPoints = this.fontSize + this.offset;
 	this.points = 0;
 
@@ -35,12 +34,12 @@ var Player = function(pos) {//{{{
 	this.update = function(){
 		if (this.up === 1 && this.y + this.ySpeed > 0)
 			this.y -= this.ySpeed;
-		else if (this.up === -1 && this.y + this.height + this.ySpeed < self.height)
+		else if (this.up === -1 && this.y + this.height + this.ySpeed < canvas.height)
 			this.y += this.ySpeed;
 	}
 
 	this.reset = function(){
-		this.y = self.height/2 - this.height/2;
+		this.y = canvas.height/2 - this.height/2;
 		this.up = 0;
 	}
 
@@ -49,24 +48,24 @@ var Player = function(pos) {//{{{
 	}
 
 	this.draw = function(){
-		self.g.fillStyle='white';
-		self.g.fillRect(this.x,this.y,this.width,this.height);
+		g.fillStyle='white';
+		g.fillRect(this.x,this.y,this.width,this.height);
 
-		self.g.font = this.fontSize + "px Arial";
-		self.g.fillText(this.points,this.xPoints,this.yPoints);
+		g.font = this.fontSize + "px Arial";
+		g.fillText(this.points,this.xPoints,this.yPoints);
 	}
 }//}}}
 var Ball = function(){//{{{
 	this.xSpeed = 6;
 	this.ySpeed = 0;
 	this.rad = 6;
-	this.x = self.width/2;
-	this.y = self.height/2;
+	this.x = canvas.width/2;
+	this.y = canvas.height/2;
 	this.right = true;
 
 	this.update = function(){
 		this.y += this.ySpeed;
-		if(this.y + this.rad <= 3 || this.y + this.rad >= self.height - 3)
+		if(this.y + this.rad <= 3 || this.y + this.rad >= canvas.height - 3)
 			this.ySpeed *= -1;
 
 		if (this.right){
@@ -79,21 +78,21 @@ var Ball = function(){//{{{
 			if (this.collideWithPlayer(playerR)){
 				this.right = false;
 			} else {
-				self.reset("left");
+				reset("left");
 			}
 		}
 		if (this.x - this.rad > playerL.x && this.x - this.rad < playerL.x + playerL.width){
 			if (this.collideWithPlayer(playerL)){
 				this.right = true;
 			} else {
-				self.reset("right");
+				reset("right");
 			}
 		}
 	}
 
 	this.reset = function(){
-		this.x = self.width/2;
-		this.y = self.height/2;
+		this.x = canvas.width/2;
+		this.y = canvas.height/2;
 		this.ySpeed = 0;
 		this.right = !this.right;
 	}
@@ -108,10 +107,10 @@ var Ball = function(){//{{{
 	}
 
 	this.draw = function(){
-		self.g.fillStyle='white';
-		self.g.beginPath();
-		self.g.arc(this.x,this.y,this.rad, 0,2*Math.PI);
-		self.g.fill();
+		g.fillStyle='white';
+		g.beginPath();
+		g.arc(this.x,this.y,this.rad, 0,2*Math.PI);
+		g.fill();
 	}
 }//}}}
 
@@ -121,8 +120,6 @@ var Ball = function(){//{{{
 var playerL = new Player(0);
 var playerR = new Player(1);
 var ball = new Ball();
-canvas.width = self.width;
-canvas.height = self.height;
 
 //setting backgroung
 function drawBackground(){
