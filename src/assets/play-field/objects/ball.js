@@ -1,35 +1,34 @@
 export default function ball(canvas, playerL, playerR, declareWinner) {
-  const g = canvas.getContext('2d');
+  const ballRadius = 6;
 
   this.xSpeed = 6;
   this.ySpeed = 0;
-  this.rad = 6;
   this.x = canvas.width / 2;
   this.y = canvas.height / 2;
-  this.right = true;
+  this.goingRight = true;
 
-  this.update = () => {
+  this.update = (game) => {
     this.y += this.ySpeed;
-    if (this.y + this.rad <= 3 || this.y + this.rad >= canvas.height - 3) this.ySpeed *= -1;
+    if (this.y + ballRadius <= 3 || this.y + ballRadius >= game.height - 3) this.ySpeed *= -1;
 
-    if (this.right) {
+    if (this.goingRight) {
       this.x += this.xSpeed;
     } else {
       this.x -= this.xSpeed;
     }
 
-    if (this.x + this.rad > playerR.x && this.x + this.rad < playerR.x + playerR.width) {
+    if (this.x + ballRadius > playerR.x && this.x + ballRadius < playerR.x + playerR.width) {
       if (this.collideWithPlayer(playerR)) {
-        this.right = false;
+        this.goingRight = false;
       } else {
         declareWinner('left');
       }
     }
-    if (this.x - this.rad > playerL.x && this.x - this.rad < playerL.x + playerL.width) {
+    if (this.x - ballRadius > playerL.x && this.x - ballRadius < playerL.x + playerL.width) {
       if (this.collideWithPlayer(playerL)) {
-        this.right = true;
+        this.goingRight = true;
       } else {
-        declareWinner('right');
+        declareWinner('goingRight');
       }
     }
   };
@@ -38,7 +37,7 @@ export default function ball(canvas, playerL, playerR, declareWinner) {
     this.x = canvas.width / 2;
     this.y = canvas.height / 2;
     this.ySpeed = 0;
-    this.right = !this.right;
+    this.goingRight = !this.goingRight;
   };
 
   this.collideWithPlayer = (playerClass) => {
@@ -49,10 +48,12 @@ export default function ball(canvas, playerL, playerR, declareWinner) {
     return false;
   };
 
-  this.draw = () => {
-    g.fillStyle = 'white';
-    g.beginPath();
-    g.arc(this.x, this.y, this.rad, 0, 2 * Math.PI);
-    g.fill();
+  this.draw = (game) => {
+    const render = game.getRender();
+
+    render.fillStyle = 'white';
+    render.beginPath();
+    render.arc(this.x, this.y, ballRadius, 0, 2 * Math.PI);
+    render.fill();
   };
 }
