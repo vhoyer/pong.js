@@ -45,23 +45,23 @@ function draw() {
 }
 
 document.addEventListener('keydown', (event) => {
-  if (event.keyCode === 38) { // up arrow
-    playerR.move('up');
-  } else if (event.keyCode === 40) { // down arrow
-    playerR.move('down');
+  if (event.key === 'w') {
+    playerL.move('up');
+  } else if (event.key === 's') {
+    playerL.move('down');
   }
 
-  if (event.keyCode === 87) { // w
-    playerL.move('up');
-  } else if (event.keyCode === 83) { // s
-    playerL.move('down');
+  if (event.key === 'ArrowUp') {
+    playerR.move('up');
+  } else if (event.key === 'ArrowDown') {
+    playerR.move('down');
   }
 });
 document.addEventListener('keyup', (event) => {
-  if (event.keyCode === 38 || event.keyCode === 40) { // up arrow || down arrow
+  if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
     playerR.move('none');
   }
-  if (event.keyCode === 87 || event.keyCode === 83) { // w || s
+  if (event.key === 'w' || event.key === 's') {
     playerL.move('none');
   }
 });
