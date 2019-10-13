@@ -37,9 +37,11 @@ class GameLoop {
     this.update.push(updateFunction);
   }
 
-  addObjectToPipeline(object) {
-    this.addToDrawPipeline(object.draw);
-    this.addToUpdatePipeline(object.update);
+  addObjectsToPipeline(...objects) {
+    objects.forEach((object) => {
+      this.addToDrawPipeline(object.draw);
+      this.addToUpdatePipeline(object.update);
+    });
   }
 }
 

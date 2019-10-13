@@ -42,6 +42,4 @@ const ball = new Ball(canvas, playerL, playerR, (winner) => {
   }
 });
 
-gameLoop.addObjectToPipeline(playerL);
-gameLoop.addObjectToPipeline(playerR);
-gameLoop.addObjectToPipeline(ball);
+gameLoop.addObjectsToPipeline(playerL, playerR, ball);
