@@ -7,6 +7,7 @@ class GameLoop {
     this.update = [];
     this.updateRate = 1000 / 60;
 
+    this.runLoop = this.runLoop.bind(this);
     this.runLoop();
   }
 
@@ -14,7 +15,7 @@ class GameLoop {
     this.drawEverything();
     this.updateEverthing();
 
-    setTimeout(this.runLoop.bind(this), this.updateRate);
+    setTimeout(this.runLoop, this.updateRate);
   }
 
   drawEverything() {
@@ -39,8 +40,13 @@ class GameLoop {
 
   addObjectsToPipeline(...objects) {
     objects.forEach((object) => {
-      this.addToDrawPipeline(object.draw);
-      this.addToUpdatePipeline(object.update);
+      if (typeof object.draw === 'function') {
+        this.addToDrawPipeline(object.draw);
+      }
+
+      if (typeof object.update === 'function') {
+        this.addToUpdatePipeline(object.update);
+      }
     });
   }
 }
