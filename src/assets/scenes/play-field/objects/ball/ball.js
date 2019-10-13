@@ -1,4 +1,4 @@
-import Player from '../characters/player';
+import Player from '../../characters/player';
 
 function Ball(canvas) {
   const ballRadius = 6;

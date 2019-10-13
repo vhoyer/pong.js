@@ -1,8 +1,8 @@
-import GameLoop from './assets/game-loop';
-import Collider from './assets/collider';
-import Ball from './assets/play-field/objects/ball';
-import Player from './assets/play-field/characters/player';
-import Scoreboard from './assets/play-field/ui/scoreboard';
+import GameLoop from './assets/internals/game-loop';
+import Collider from './assets/internals/collider';
+import Ball from './assets/scenes/play-field/objects/ball';
+import Player from './assets/scenes/play-field/characters/player';
+import Scoreboard from './assets/scenes/play-field/ui/scoreboard';
 
 const canvas = document.getElementById('game');
 canvas.width = 800 * 1.3;
