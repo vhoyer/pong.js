@@ -1,8 +1,8 @@
+import Scoreboard from './assets/play-field/ui/scoreboard';
 import GameLoop from './assets/game-loop';
 import Player from './assets/play-field/characters/player';
 import Ball from './assets/play-field/objects/ball';
 
-// screen vars
 const canvas = document.getElementById('game');
 canvas.width = 800 * 1.3;
 canvas.height = 450 * 1.3;
@@ -18,8 +18,8 @@ function drawBackground(game) {
 const gameLoop = new GameLoop(canvas);
 gameLoop.addToDrawPipeline(drawBackground);
 
+const scoreboard = new Scoreboard();
 
-// setting vars
 const playerL = new Player(canvas, {
   side: 'left',
   upKey: 'w',
@@ -35,11 +35,7 @@ const ball = new Ball(canvas, playerL, playerR, (winner) => {
   playerL.reset();
   playerR.reset();
 
-  if (winner === 'left') {
-    playerL.point();
-  } else {
-    playerR.point();
-  }
+  scoreboard.incrementScore(winner);
 });
 
-gameLoop.addObjectsToPipeline(playerL, playerR, ball);
+gameLoop.addObjectsToPipeline(scoreboard, playerL, playerR, ball);

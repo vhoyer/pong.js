@@ -21,11 +21,6 @@ function Player(canvas, { side, upKey, downKey }) { // {{{
   this.x = side === 'left' ? this.screenMargin : canvas.width - this.width - this.screenMargin;
   this.y = canvas.height / 2 - this.height / 2;
 
-  this.fontSize = 35;
-  this.xPoints = side === 'left' ? canvas.width * (1 / 6) : canvas.width * (4 / 6);
-  this.yPoints = this.fontSize + this.screenMargin;
-  this.points = 0;
-
   this.move = (dir) => {
     if (dir === 'up') {
       this.direction = 1;
@@ -49,18 +44,11 @@ function Player(canvas, { side, upKey, downKey }) { // {{{
     this.direction = 0;
   };
 
-  this.point = () => {
-    this.points += 1;
-  };
-
   this.draw = (game) => {
     const render = game.getRender();
 
     render.fillStyle = 'white';
     render.fillRect(this.x, this.y, this.width, this.height);
-
-    render.font = `${this.fontSize}px Arial`;
-    render.fillText(this.points, this.xPoints, this.yPoints);
   };
 }
 

@@ -28,7 +28,7 @@ export default function ball(canvas, playerL, playerR, declareWinner) {
       if (this.collideWithPlayer(playerL)) {
         this.goingRight = true;
       } else {
-        declareWinner('goingRight');
+        declareWinner('right');
       }
     }
   };
