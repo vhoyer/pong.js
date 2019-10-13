@@ -5,17 +5,22 @@ class GameLoop {
 
     this.draw = [];
     this.update = [];
-    this.updateRate = 1000 / 60;
 
     this.runLoop = this.runLoop.bind(this);
-    this.runLoop();
+    this.runLoop(Date.now());
   }
 
-  runLoop() {
+  runLoop(lastExecutionTime) {
     this.drawEverything();
     this.updateEverthing();
 
-    setTimeout(this.runLoop, this.updateRate);
+    const currentExecutionTime = Date.now();
+    const executionDelta = currentExecutionTime - lastExecutionTime;
+
+    const desiredUpdateRate = 1000 / 60;
+    const millisecondsToNextGameTick = desiredUpdateRate - executionDelta;
+
+    setTimeout(() => this.runLoop(currentExecutionTime), millisecondsToNextGameTick);
   }
 
   drawEverything() {
