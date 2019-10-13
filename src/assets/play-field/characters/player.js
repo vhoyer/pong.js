@@ -32,11 +32,25 @@ function Player(canvas, { side, upKey, downKey }) { // {{{
   };
 
   this.update = (game) => {
-    if (this.direction === 1 && this.y + this.ySpeed > 0) {
-      this.y -= this.ySpeed;
-    } else if (this.direction === -1 && this.y + this.height + this.ySpeed < game.height) {
-      this.y += this.ySpeed;
+    const {
+      x,
+      y,
+      width,
+      height,
+      direction,
+      ySpeed,
+    } = this;
+
+    if (direction === 1 && y + ySpeed > 0) {
+      this.y -= ySpeed;
+    } else if (direction === -1 && y + height + ySpeed < game.height) {
+      this.y += ySpeed;
     }
+
+    return {
+      topLeft: { x, y },
+      bottomRight: { x: x + width, y: y + height },
+    };
   };
 
   this.reset = () => {

@@ -35,6 +35,11 @@ export default function ball(canvas, playerL, playerR, declareWinner) {
         declareWinner('right');
       }
     }
+
+    return {
+      topLeft: { x: x - ballRadius, y: y - ballRadius },
+      bottomRight: { x: x + ballRadius, y: y + ballRadius },
+    };
   };
 
   this.reset = () => {
