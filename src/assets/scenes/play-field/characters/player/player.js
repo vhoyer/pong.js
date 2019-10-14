@@ -1,4 +1,10 @@
-function Player(canvas, { side, upKey, downKey }) { // {{{
+function Player({
+  initialY,
+  initialX,
+  side,
+  upKey,
+  downKey,
+}) {
   document.addEventListener('keydown', (event) => {
     if (event.key === upKey) {
       this.move('up');
@@ -17,8 +23,14 @@ function Player(canvas, { side, upKey, downKey }) { // {{{
   const ySpeed = 3.4;
   const width = 10;
   const height = 100;
-  const x = side === 'left' ? screenMargin : canvas.width - width - screenMargin;
-  let y = canvas.height / 2 - height / 2;
+
+  const startingX = {
+    left: initialX + screenMargin,
+    right: initialX - width - screenMargin,
+  };
+
+  const x = startingX[side];
+  let y = initialY - height / 2;
 
   this.getBox = () => ({
     x, y, height, width,
@@ -45,7 +57,7 @@ function Player(canvas, { side, upKey, downKey }) { // {{{
   };
 
   this.reset = () => {
-    y = canvas.height / 2 - height / 2;
+    y = initialY - height / 2;
     direction = 0;
   };
 

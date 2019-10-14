@@ -21,13 +21,17 @@ gameLoop.addToDrawPipeline(drawBackground);
 
 const scoreboard = new Scoreboard();
 
-const playerL = new Player(canvas, {
+const playerL = new Player({
+  initialX: 0,
+  initialY: canvas.height / 2,
   side: 'left',
   upKey: 'w',
   downKey: 's',
 });
 
-const playerR = new Player(canvas, {
+const playerR = new Player({
+  initialX: canvas.width,
+  initialY: canvas.height / 2,
   side: 'right',
   upKey: 'ArrowUp',
   downKey: 'ArrowDown',
