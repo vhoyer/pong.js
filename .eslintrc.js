@@ -23,5 +23,6 @@ module.exports = {
     sourceType: 'module',
   },
   rules: {
+    'no-unused-vars': ['error', { 'argsIgnorePattern': '^_' }]
   },
 };
