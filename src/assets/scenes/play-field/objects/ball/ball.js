@@ -1,10 +1,10 @@
 import Player from '../../characters/player';
 
-function Ball({ inicialX, inicialY }) {
+function Ball({ initialX, initialY }) {
   const ballRadius = 6;
   const initialPosition = {
-    x: inicialX,
-    y: inicialY,
+    x: initialX,
+    y: initialY,
   };
 
   const xSpeed = 6;

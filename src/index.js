@@ -34,8 +34,8 @@ const playerR = new Player(canvas, {
 });
 
 const ball = new Ball({
-  inicialX: canvas.width / 2,
-  inicialY: canvas.height / 2,
+  initialX: canvas.width / 2,
+  initialY: canvas.height / 2,
 });
 
 const declareWinner = (winner) => {
