@@ -1,3 +1,4 @@
+import Player from '../../characters/player';
 import Ball from '.';
 
 const arcFunction = jest.fn();
@@ -15,8 +16,8 @@ describe('Play field > Ball', () => {
 
   beforeEach(() => {
     ball = new Ball({
-      inicialX: 0,
-      inicialY: 0,
+      initialX: 0,
+      initialY: 0,
     });
   });
 
@@ -68,18 +69,25 @@ describe('Play field > Ball', () => {
         });
       });
 
+      const buildPlayer = (override = {}) => new Player({
+        initialX: 0,
+        initialY: 0,
+        side: 'left',
+        ...override,
+      });
+
       describe.each([
-        ['top', {}, 0, -5],
-        ['middle', {}, 0, -6],
-        ['bottom', {}, 0, -7],
-      ])('when ball bumps into the %s of the player', (direction, player, x, y) => {
+        ['top', buildPlayer({ initialY: -10 }), -5],
+        ['middle', buildPlayer(), -6],
+        ['bottom', buildPlayer({ initialY: 10 }), -7],
+      ])('when ball bumps into the %s of the player', (direction, player, y) => {
         beforeEach(() => {
           ball.onCollision(player);
           hitbox = ball.onFixedUpdate(mockGame);
         });
 
         it('start going to the opposite direction', () => {
-          expect(hitbox.topLeft.x).toEqual(x);
+          expect(hitbox.topLeft.x).toEqual(-6);
         });
 
         it(`start going towards the ${direction} of the screen`, () => {
