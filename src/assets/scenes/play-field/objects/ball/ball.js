@@ -19,10 +19,14 @@ function Ball({ initialX, initialY }) {
     goingRight = !goingRight;
   };
 
+  this.invertYDirection = () => {
+    ySpeed *= -1;
+  };
+
   this.onFixedUpdate = (game) => {
     y += ySpeed;
-    if (y + ballRadius <= 3 || y + ballRadius >= game.height - 3) {
-      ySpeed *= -1;
+    if (y <= 0 || y >= game.height) {
+      this.invertYDirection();
     }
 
     if (goingRight) {
