@@ -1,10 +1,10 @@
 import Player from '../../characters/player';
 
-function Ball(canvas) {
+function Ball({ initialX, initialY }) {
   const ballRadius = 6;
   const initialPosition = {
-    x: canvas.width / 2,
-    y: canvas.height / 2,
+    x: initialX,
+    y: initialY,
   };
 
   const xSpeed = 6;
@@ -19,10 +19,14 @@ function Ball(canvas) {
     goingRight = !goingRight;
   };
 
+  this.invertYDirection = () => {
+    ySpeed *= -1;
+  };
+
   this.onFixedUpdate = (game) => {
     y += ySpeed;
-    if (y + ballRadius <= 3 || y + ballRadius >= game.height - 3) {
-      ySpeed *= -1;
+    if (y <= 0 || y >= game.height) {
+      this.invertYDirection();
     }
 
     if (goingRight) {
