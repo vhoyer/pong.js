@@ -1,4 +1,4 @@
-import Player from '../../characters/player';
+import Player from '../player';
 import Ball from '.';
 
 const arcFunction = jest.fn();
