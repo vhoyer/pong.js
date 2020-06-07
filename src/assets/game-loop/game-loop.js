@@ -49,7 +49,11 @@ function GameLoop(canvas) {
 
   // Draw functions
   const drawPipeline = [];
-  const drawEverything = () => drawPipeline.forEach((onDraw) => onDraw(game));
+  const drawEverything = () => drawPipeline.forEach((onDraw) => {
+    game.getRender().save();
+    onDraw(game);
+    game.getRender().restore();
+  });
 
   // update functions
   const updatePipeline = [];

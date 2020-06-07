@@ -6,7 +6,11 @@ describe('Engine > Game Loop', () => {
     height: 450,
     getContext(contextScope) {
       return ({
-        '2d': 'this is most definitly an instance of CanvasRenderingContext2D',
+        '2d': {
+          save: () => {},
+          id: 'this is most definitly an instance of CanvasRenderingContext2D',
+          restore: () => {},
+        },
       })[contextScope];
     },
   };
@@ -244,7 +248,7 @@ describe('Engine > Game Loop', () => {
 
           describe('#getRender', () => {
             it('is CanvasRenderingContext2D', () => {
-              expect(gameObject.getRender()).toEqual('this is most definitly an instance of CanvasRenderingContext2D');
+              expect(gameObject.getRender().id).toEqual('this is most definitly an instance of CanvasRenderingContext2D');
             });
           });
         });
