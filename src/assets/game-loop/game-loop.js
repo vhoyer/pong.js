@@ -27,75 +27,69 @@ function calculateOneCollision(A, B) {
   }
 }
 
-class GameLoop {
-  constructor(canvas) {
-    this.game = canvas;
-    this.game.getRender = () => canvas.getContext('2d');
+function calculateCollisions(hitboxes) {
+  const inverseHitboxes = hitboxes.slice().reverse();
 
-    this.draw = [];
-    this.update = [];
-    this.hitboxes = [];
+  for (let i = 0; i < hitboxes.length; i += 1) {
+    inverseHitboxes.pop();
 
-    this.runLoop = this.runLoop.bind(this);
-    this.runLoop(Date.now());
+    for (let j = 0; j < inverseHitboxes.length; j += 1) {
+      calculateOneCollision(
+        hitboxes[i],
+        inverseHitboxes[j],
+      );
+    }
   }
+}
 
-  runLoop(lastExecutionTime) {
-    this.hitboxes = this.updateEverthing();
-    this.calculateCollisions();
+function GameLoop(canvas) {
+  // Initialize values
+  const game = canvas;
+  game.getRender = () => canvas.getContext('2d');
 
-    this.drawEverything();
+  // Draw functions
+  const drawPipeline = [];
+  const drawEverything = () => drawPipeline.forEach((onDraw) => onDraw(game));
 
+  // update functions
+  const updatePipeline = [];
+  const updateEverthing = () => updatePipeline.reduce((hitboxes, [onFixedUpdate, object]) => {
+    const currentObjectHitbox = onFixedUpdate(game);
+
+    if (!currentObjectHitbox) return hitboxes;
+
+    return [...hitboxes, [currentObjectHitbox, object]];
+  }, []);
+
+  // Game loop
+  const runLoop = (lastExecutionTime) => {
+    const hitboxes = updateEverthing();
+    calculateCollisions(hitboxes);
+
+    drawEverything();
+
+    // calculate delay to next tick
     const currentExecutionTime = Date.now();
     const executionDelta = currentExecutionTime - lastExecutionTime;
 
     const desiredUpdateRate = 1000 / 60;
     const millisecondsToNextGameTick = desiredUpdateRate - executionDelta;
 
-    setTimeout(() => this.runLoop(currentExecutionTime), millisecondsToNextGameTick);
-  }
+    // call next tick
+    setTimeout(() => runLoop(currentExecutionTime), millisecondsToNextGameTick);
+  };
+  runLoop(Date.now());
 
-  drawEverything() {
-    this.draw.forEach((onDraw) => {
-      onDraw(this.game);
-    });
-  }
+  // Public API
+  this.addToDrawPipeline = function addToDrawPipeline(onDraw) {
+    drawPipeline.push(onDraw);
+  };
 
-  updateEverthing() {
-    return this.update.reduce((hitboxes, [onFixedUpdate, object]) => {
-      const currentObjectHitbox = onFixedUpdate(this.game);
+  this.addToUpdatePipeline = function addToUpdatePipeline(onFixedUpdate, object) {
+    updatePipeline.push([onFixedUpdate, object]);
+  };
 
-      if (!currentObjectHitbox) return hitboxes;
-
-      return [...hitboxes, [currentObjectHitbox, object]];
-    }, []);
-  }
-
-  calculateCollisions() {
-    const { hitboxes } = this;
-    const inverseHitboxes = hitboxes.slice().reverse();
-
-    for (let i = 0; i < hitboxes.length; i += 1) {
-      inverseHitboxes.pop();
-
-      for (let j = 0; j < inverseHitboxes.length; j += 1) {
-        calculateOneCollision(
-          hitboxes[i],
-          inverseHitboxes[j],
-        );
-      }
-    }
-  }
-
-  addToDrawPipeline(onDraw) {
-    this.draw.push(onDraw);
-  }
-
-  addToUpdatePipeline(onFixedUpdate, object) {
-    this.update.push([onFixedUpdate, object]);
-  }
-
-  addObjectsToPipeline(...objects) {
+  this.addObjectsToPipeline = (...objects) => {
     objects.forEach((object) => {
       if (typeof object.onDraw === 'function') {
         this.addToDrawPipeline(object.onDraw);
@@ -105,7 +99,7 @@ class GameLoop {
         this.addToUpdatePipeline(object.onFixedUpdate, object);
       }
     });
-  }
+  };
 }
 
 export default GameLoop;
