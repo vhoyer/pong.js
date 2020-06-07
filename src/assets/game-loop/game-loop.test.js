@@ -30,6 +30,46 @@ describe('Engine > Game Loop', () => {
     });
 
     describe('#addObjectsToPipeline', () => {
+      describe('something', () => {
+        const theOtherOne = {
+          onFixedUpdate() {
+            return {
+              topLeft: { x: 10, y: 10 },
+              bottomRight: { x: 14, y: 14 },
+            };
+          },
+        };
+
+        const mockInGameObject = {
+          privateProp: 'wololo',
+
+          /* eslint-disable no-param-reassign */
+          onSetup(game) { game.wSetup = this.privateProp; },
+          onDraw(game) { game.wDraw = this.privateProp; },
+          onCollision(collidedOne) { collidedOne.wCollision = this.privateProp; },
+          onFixedUpdate(game) {
+            game.wFixedUpdate = this.privateProp;
+            return {
+              topLeft: { x: 10, y: 10 },
+              bottomRight: { x: 14, y: 14 },
+            };
+          },
+          /* eslint-enable no-param-reassign */
+        };
+
+        beforeEach(() => {
+          instance.addObjectsToPipeline(mockInGameObject, theOtherOne);
+          jest.runOnlyPendingTimers();
+        });
+
+        it('binds this to the current object before executing stuff', () => {
+          expect(mockCanvas.wDraw).toEqual('wololo');
+          expect(mockCanvas.wFixedUpdate).toEqual('wololo');
+          expect(theOtherOne.wCollision).toEqual('wololo');
+          expect(mockCanvas.wSetup).toEqual('wololo');
+        });
+      });
+
       describe('when on object is passed as argument', () => {
         const mockInGameObject = {
           onDraw: jest.fn(),

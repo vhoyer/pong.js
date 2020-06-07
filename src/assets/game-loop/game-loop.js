@@ -18,11 +18,11 @@ function calculateOneCollision(A, B) {
 
   if (doesBoxesOverlap(hitboxA, hitboxB)) {
     if (typeof objectA.onCollision === 'function') {
-      objectA.onCollision(objectB);
+      objectA.onCollision.call(objectA, objectB);
     }
 
     if (typeof objectB.onCollision === 'function') {
-      objectB.onCollision(objectA);
+      objectB.onCollision.call(objectB, objectA);
     }
   }
 }
@@ -92,15 +92,15 @@ function GameLoop(canvas) {
   this.addObjectsToPipeline = (...objects) => {
     objects.forEach((object) => {
       if (typeof object.onDraw === 'function') {
-        this.addToDrawPipeline(object.onDraw);
+        this.addToDrawPipeline(object.onDraw.bind(object));
       }
 
       if (typeof object.onFixedUpdate === 'function') {
-        this.addToUpdatePipeline(object.onFixedUpdate, object);
+        this.addToUpdatePipeline(object.onFixedUpdate.bind(object), object);
       }
 
       if (typeof object.onSetup === 'function') {
-        object.onSetup(game);
+        object.onSetup.call(object, game);
       }
     });
   };
