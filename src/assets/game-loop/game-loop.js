@@ -98,6 +98,10 @@ function GameLoop(canvas) {
       if (typeof object.onFixedUpdate === 'function') {
         this.addToUpdatePipeline(object.onFixedUpdate, object);
       }
+
+      if (typeof object.onSetup === 'function') {
+        object.onSetup(game);
+      }
     });
   };
 }

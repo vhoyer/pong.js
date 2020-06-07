@@ -35,10 +35,15 @@ describe('Engine > Game Loop', () => {
           onDraw: jest.fn(),
           onFixedUpdate: jest.fn(),
           onCollision: jest.fn(),
+          onSetup: jest.fn(),
         };
 
         beforeEach(() => {
           instance.addObjectsToPipeline(mockInGameObject);
+        });
+
+        it('calls setup once', () => {
+          expect(mockInGameObject.onSetup).toHaveBeenCalledTimes(1);
         });
 
         it('does not call callbacks', () => {
