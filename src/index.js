@@ -17,3 +17,5 @@ const gameLoop = new GameLoop(canvas);
 gameLoop.addToDrawPipeline(drawBackground);
 
 playField(gameLoop, canvas);
+
+window.gameLoop = gameLoop;
